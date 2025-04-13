@@ -1,0 +1,31 @@
+.header {
+	position: sticky;
+	top: 0;
+	background-color: black;
+	width: 100%;
+	color: black;
+	height: 4rem;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding-top: 0.75rem;
+	padding-bottom: 0.75rem;
+	z-index: 20;
+}
+
+@media (min-width: 1024px) {
+	.header {
+		justify-content: center;
+	}
+}
+
+.logoBox {
+	z-index: 2;
+	position: absolute;
+	width: 250px;
+	height: calc(100% - 10px);
+	margin-left: 0.75rem;
+	left: 0;
+	display: flex;
+	align-items: center;
+}

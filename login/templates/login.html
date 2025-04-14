@@ -1,0 +1,12 @@
+{% extends 'home.html' %}
+
+{% block content %} 
+   <h1>PokeTrade Login</h1>
+   <form method="post">
+     {% csrf_token %}
+     {{ form.as_p }}
+     <button type="submit">Login</button>
+     <a href="{% url 'password_reset' %}" style="color: #00C8FFCC; font-weight: bold;">Forgot Password?</a>
+   </form>
+    <p> New here? <a href="{% url 'signup' %}" style="color: #00C8FFCC; font-weight: bold;">Sign up</a></p>
+{% endblock %}

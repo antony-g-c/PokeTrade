@@ -1,0 +1,12 @@
+{% extends 'navigation.html' %}
+
+{% block content %}
+	{% if card_count == 0 %}
+        <h2>No cards in collection</h2>
+    {% else %}
+        {% for card in cards %}
+            <img src="{{ card.image }}" alt="{{ card.name }}">
+            <h2>{{ card.name }}</h2>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

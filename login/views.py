@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from login.forms import UserCreationForm
 from django.contrib.auth.models import User
+from PokeTrade.utils import generatePokemon
 """
 from django.contrib.sites.shortcuts import get_current_site  
 from django.utils.encoding import force_bytes, force_text  
@@ -16,7 +17,7 @@ from django.core.mail import EmailMessage
 
 # Create your views here.
 def home(request):
-    return render(request, 'login.html')
+    return render(request, 'registration/login.html')
 
 def signup(request):
     if request.method == 'POST':  
@@ -24,7 +25,8 @@ def signup(request):
         if form.is_valid():  
             user=form.save()
             login(request, user)
-            return redirect('movieStore:movies')
-    else:  
+            generatePokemon(5, user)
+            return redirect('collection')
+    else:
         form = UserCreationForm()
-    return render(request, 'signup.html', {'form':form})
+    return render(request, 'registration/signup.html', {'form':form})

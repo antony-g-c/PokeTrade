@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeTrade Marketplace</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        /* General Styles */
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #282828;
+            color: white;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 20px;
+            background-color: #121212;
+            background-image: url("{% static 'images/banner.png' %}");
+            background-size: 70%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .user-info {
+            font-size: 20px;
+            font-weight: 600;
+            text-shadow: 0px 0px 8px rgba(0, 200, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #121212;
+            padding: 10px 0;
+            width: 100%;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar.fixed {
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .navbar li {
+            margin: 0 15px;
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            background: none;
+            border: none;
+            color: white;
+            position: absolute;
+            left: 20px;
+        }
+
+        .nav-link, .buttonToLink {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 15px;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+
+        .nav-link:hover, .buttonToLink:hover {
+            background-color: #282828;
+            transform: scale(1.05);
+        }
+
+        .nav-link:focus, .buttonToLink:focus {
+            outline: none;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .navbar {
+                justify-content: flex-start;
+                padding-left: 20px;
+                width: 100%;
+                display: none;
+                flex-direction: column;
+            }
+
+            .navbar.active {
+                display: flex;
+            }
+
+            .navbar ul {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-left: 0;
+            }
+
+            .navbar li {
+                margin: 10px 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #121212;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            width: max-content;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
+            color: white;
+            text-decoration: none;
+            background: none;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1><img src="{% static 'images/gt logo.png' %}" alt="GT" style="height: 70px;"></h1>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <div class="user-menu">
+            {% if user.is_authenticated %}
+                <div class="user-info" onclick="toggleDropdown()">
+                    {{ user.username }}
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{% url 'password_change' %}">Change Password</a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="user-info">Login</a>
+                <a href="{% url 'signup' %}" class="user-info">Signup</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <ul>
+            <li><a href="{% url 'poke_card' %}" class="nav-link">Marketplace</a></li>
+            {% if user.is_authenticated %}
+                <li><button class="nav-link" onclick="document.getElementById('dropdownMenu').style.display = 'block'">My Account</button></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Dynamic Content Section -->
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        document.querySelectorAll('.nav-link, .buttonToLink').forEach(button => {
+            button.addEventListener('mouseenter', () => button.style.transform = 'scale(1.05)');
+            button.addEventListener('mouseleave', () => button.style.transform = 'scale(1)');
+        });
+        function toggleMenu() { document.querySelector('.navbar').classList.toggle('active'); }
+        window.addEventListener('scroll', function() {
+            var navbar = document.querySelector('.navbar');
+            var header = document.querySelector('.header');
+            if (window.scrollY > header.clientHeight) navbar.classList.add('fixed');
+            else navbar.classList.remove('fixed');
+        });
+        function toggleDropdown() {
+            var menu = document.getElementById('dropdownMenu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-info')) {
+                var dropdowns = document.getElementsByClassName('dropdown-menu');
+                for (var i = 0; i < dropdowns.length; i++) {
+                    if (dropdowns[i].style.display === 'block') dropdowns[i].style.display = 'none';
+                }
+            }
+        };
+    </script>
+
+</body>
+</html>

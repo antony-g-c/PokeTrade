@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <div id="searchbar">
+    <form method="get" action="{% url 'poke_card' %}">
+      <input
+        style="height: 30px; width: 400px; border-radius: 30px; padding-left: 14px; margin-right: 8px; border: none;"
+        type="text" name="q" class="searching"
+        placeholder="Find a listing..."
+        value="{{ request.GET.q }}"
+      >
+      <style>
+        #searchbutton { border-radius:10px; height:30px; background:#eedc82; border:none; }
+        #searchbutton:hover { background:#eba900; }
+        .listingItem:hover {
+          background:#181818; transform:scale(1.05);
+          box-shadow:7px 7px 18px black; cursor:pointer;
+        }
+      </style>
+      <button type="submit" class="buttonToLink">Search</button>
+    </form>
+  </div>
+
+  {% if myCard %}
+    <div id="container">
+      {% for card in myCard %}
+        <a href="{% url 'details' card.id %}" style="text-decoration:none; color:inherit;">
+          <div class="listingItem">
+            <img class="itemImg" src="{{ card.image }}" alt="{{ card.name }}">
+            <h2 class="inlist">{{ card.name }}</h2>
+            <p class="inlist">{{ card.type }}</p>
+            <p class="inlist">${{ card.price }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="margin-left:20px;">
+      No listings found for '{{ request.GET.q }}'.
+    </p>
+  {% endif %}
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'marketplace1/style.css' %}">
+
+{% endblock %}

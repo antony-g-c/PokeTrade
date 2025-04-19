@@ -8,6 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+        /* General Styles */
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -17,6 +18,7 @@
             color: white;
         }
 
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -46,9 +48,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            cursor: pointer;
         }
 
+        /* Navbar */
         .navbar {
             display: flex;
             justify-content: center;
@@ -77,6 +79,7 @@
             margin: 0 15px;
         }
 
+        /* Mobile Menu */
         .menu-toggle {
             display: none;
             font-size: 24px;
@@ -88,22 +91,46 @@
             position: absolute;
             left: 20px;
         }
-
-        .nav-link, .buttonToLink {
+        .nav-link {
             background: none;
             border: none;
             color: white;
             font-size: 16px;
             font-weight: bold;
             padding: 10px 15px;
+            text-shadow: 0px 0px 8px rgba(0, 200, 255, 0.8);
             text-decoration: none;
             cursor: pointer;
+            width: auto;
+            font-family: 'Poppins', sans-serif;
+            display: inline-block;
+            border-radius: 5px;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+        .nav-link:hover {
+            background-color: #282828;
+            transform: scale(1.05);
+        }
+        .buttonToLink {
+            background: #515151;
+            border: none;
+            color: white;
+            font-size: 16px;
+            padding: 10px 15px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            width: auto;
+            font-family: 'Poppins', sans-serif;
+            display: inline-block;
             border-radius: 5px;
             transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
         }
 
-        .nav-link:hover, .buttonToLink:hover {
-            background-color: #282828;
+        /* Hover Effects */
+        .buttonToLink:hover {
+            background-color: white;
+            color: black;
             transform: scale(1.05);
         }
 
@@ -111,6 +138,7 @@
             outline: none;
         }
 
+        /* Responsive Design */
         @media screen and (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -143,7 +171,6 @@
                 display: block;
             }
         }
-
         .user-menu {
             position: relative;
             display: inline-block;
@@ -157,15 +184,16 @@
             border: 1px solid #333;
             border-radius: 8px;
             padding: 10px;
-            width: max-content;
+            width: 180px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
             z-index: 2000;
         }
 
         .dropdown-menu a,
         .dropdown-menu button {
-            display: block;
+            display: flex;
             color: white;
+            text-shadow: 0px 0px 8px rgba(0, 200, 255, 0.8);
             text-decoration: none;
             background: none;
             border: none;
@@ -186,20 +214,16 @@
 </head>
 <body>
 
+    <!-- Header -->
     <div class="header">
-        <h1><img src="{% static 'images/gt logo.png' %}" alt="GT" style="height: 70px;"></h1>
+        <h1><img src="{% static 'images/banner.png' %}" alt="PokeTrade" style="height: 70px;"></h1>
         <button class="menu-toggle" onclick="toggleMenu()">☰</button>
         <div class="user-menu">
             {% if user.is_authenticated %}
-                <div class="user-info" onclick="toggleDropdown()">
-                    {{ user.username }}
-                </div>
+                <div class="user-info" onclick="toggleDropdown()">{{ user.username }}</div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="{% url 'password_change' %}">Change Password</a>
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit">Logout</button>
-                    </form>
+                    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Logout</button></form>
                 </div>
             {% else %}
                 <a href="{% url 'login' %}" class="user-info">Login</a>
@@ -208,42 +232,46 @@
         </div>
     </div>
 
+    <!-- Navigation Bar -->
     <div class="navbar">
         <ul>
             <li><a href="{% url 'poke_card' %}" class="nav-link">Marketplace</a></li>
+            <li><a href="{% url 'trade' %}" class="nav-link">Trade</a></li>
             {% if user.is_authenticated %}
-                <li><button class="nav-link" onclick="document.getElementById('dropdownMenu').style.display = 'block'">My Account</button></li>
+                <li><a href="{% url 'my_collection' %}" class="nav-link">My Collection</a></li>
+                <li><a href="{% url 'my_offers' %}" class="nav-link">My Offers</a></li>
+                <li><a href="{% url 'create_listing' %}" class="nav-link">Create Listing</a></li>
+            {% else %}
+                <li><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
             {% endif %}
         </ul>
     </div>
 
+    <!-- Dynamic Content Section -->
     {% block content %}
     {% endblock %}
 
     <script>
         document.querySelectorAll('.nav-link, .buttonToLink').forEach(button => {
-            button.addEventListener('mouseenter', () => button.style.transform = 'scale(1.05)');
-            button.addEventListener('mouseleave', () => button.style.transform = 'scale(1)');
+            button.addEventListener('mouseenter', () => { button.style.transform = 'scale(1.05)'; });
+            button.addEventListener('mouseleave', () => { button.style.transform = 'scale(1)'; });
         });
         function toggleMenu() { document.querySelector('.navbar').classList.toggle('active'); }
-        window.addEventListener('scroll', function() {
-            var navbar = document.querySelector('.navbar');
-            var header = document.querySelector('.header');
-            if (window.scrollY > header.clientHeight) navbar.classList.add('fixed');
-            else navbar.classList.remove('fixed');
+        window.addEventListener("scroll", function () {
+            var navbar = document.querySelector(".navbar");
+            var header = document.querySelector(".header");
+            if (window.scrollY > header.clientHeight) { navbar.classList.add("fixed"); } else { navbar.classList.remove("fixed"); }
         });
-        function toggleDropdown() {
-            var menu = document.getElementById('dropdownMenu');
-            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        }
+        function toggleDropdown() { var menu = document.getElementById("dropdownMenu"); menu.style.display = (menu.style.display === "block") ? "none" : "block"; }
         window.onclick = function(event) {
             if (!event.target.matches('.user-info')) {
-                var dropdowns = document.getElementsByClassName('dropdown-menu');
+                var dropdowns = document.getElementsByClassName("dropdown-menu");
                 for (var i = 0; i < dropdowns.length; i++) {
-                    if (dropdowns[i].style.display === 'block') dropdowns[i].style.display = 'none';
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.style.display === "block") { openDropdown.style.display = "none"; }
                 }
             }
-        };
+        }
     </script>
 
 </body>

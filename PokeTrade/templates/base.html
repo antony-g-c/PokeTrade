@@ -8,7 +8,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-        /* General Styles */
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -18,7 +17,6 @@
             color: white;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -51,7 +49,6 @@
             cursor: pointer;
         }
 
-        /* Navbar */
         .navbar {
             display: flex;
             justify-content: center;
@@ -80,7 +77,6 @@
             margin: 0 15px;
         }
 
-        /* Mobile Menu */
         .menu-toggle {
             display: none;
             font-size: 24px;
@@ -115,7 +111,6 @@
             outline: none;
         }
 
-        /* Responsive Design */
         @media screen and (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -191,7 +186,6 @@
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
         <h1><img src="{% static 'images/gt logo.png' %}" alt="GT" style="height: 70px;"></h1>
         <button class="menu-toggle" onclick="toggleMenu()">☰</button>
@@ -214,7 +208,6 @@
         </div>
     </div>
 
-    <!-- Navigation Bar -->
     <div class="navbar">
         <ul>
             <li><a href="{% url 'poke_card' %}" class="nav-link">Marketplace</a></li>
@@ -224,7 +217,6 @@
         </ul>
     </div>
 
-    <!-- Dynamic Content Section -->
     {% block content %}
     {% endblock %}
 

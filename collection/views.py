@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Card
+from django.contrib.auth.decorators import login_required
 
 
 def collection(request):
@@ -14,3 +15,7 @@ def collection(request):
     }
 
     return render(request, "collection.html", context)
+
+@login_required
+def shop(request):
+    return render(request, "shop.html")

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>List a Card for Sale</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">List for Sale</button>
+  </form>
+{% endblock %}

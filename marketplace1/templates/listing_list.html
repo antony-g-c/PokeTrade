@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Marketplace</h1>
+  <a href="{% url 'marketplace1:listing_create' %}">+ New Listing</a>
+  <ul>
+    {% for l in listings %}
+      <li>
+        <a href="{% url 'marketplace1:listing_detail' l.pk %}">
+          {{ l.card.name }} — ${{ l.price }}
+        </a> by {{ l.seller.username }}
+      </li>
+    {% empty %}
+      <li>No active listings.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

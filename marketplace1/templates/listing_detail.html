@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ listing.card.name }} — ${{ listing.price }}</h1>
+  <p>Seller: {{ listing.seller.username }}</p>
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'marketplace1:listing_buy' listing.pk %}">
+      {% csrf_token %}
+      <button type="submit">Buy Now</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to buy.</p>
+  {% endif %}
+{% endblock %}

@@ -1,9 +1,16 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
+
+def get_admin_user():
+    try:
+        return User.objects.get(username='admin').id
+    except User.DoesNotExist:
+        return None
 
 class ListingForTrading(models.Model):
     card = models.ForeignKey('marketplace1.Card', on_delete=models.CASCADE, related_name='trade_listings')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='trade_listings')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trade_listings', default=get_admin_user())
     is_open = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
 
@@ -15,7 +22,7 @@ class ListingForTrading(models.Model):
 
 class OfferTrade(models.Model):
     listing = models.ForeignKey(ListingForTrading, on_delete=models.CASCADE, related_name='offers')
-    offered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='trade_offers')
+    offered_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trade_offers')
     card_offered = models.ForeignKey('marketplace1.Card', on_delete=models.CASCADE, related_name='trade_offers')
     CHOICES = [
         ("PENDING", "Pending"),

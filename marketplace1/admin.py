@@ -5,7 +5,7 @@ from .models import Card, Listing
 # Register your models here.
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner")
+    list_display = ("name", "owner_id")
 
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):

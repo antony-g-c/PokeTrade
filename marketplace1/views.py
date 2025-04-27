@@ -3,16 +3,8 @@ from django.http import HttpResponse
 from .models import Card, Listing
 from django.template import loader
 from django.contrib import messages
-from django.contrib.auth.models import User
-
-
-
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts           import get_object_or_404, redirect, render
-from .forms  import ListingForm
-from .models import Listing
-# Create your views here.
+from .forms import ListingForm
 
 def poke_card(request):
     myCard = Card.objects.all().values()
@@ -23,14 +15,12 @@ def poke_card(request):
     return HttpResponse(template.render(context, request))
 
 def details(request, id):
-    myCard = Card.objects.get(id=id).get(id=id)
+    myCard = Card.objects.get(id=id)
     template = loader.get_template('details.html')
     context = {
         'myCard': myCard,
     }
     return HttpResponse(template.render(context, request))
-
-
 
 @login_required
 def listing_create(request):
@@ -46,20 +36,18 @@ def listing_create(request):
                 listing.save()
                 messages.success(request, "Your card is now listed for sale!")
                 return redirect("marketplace1:listing_list")
+        return render(request, "marketplace1/listing_form.html", {"form": form})
     else:
         form = ListingForm()
     return render(request, "marketplace1/listing_form.html", {"form": form})
-
 
 def listing_list(request):
     qs = Listing.objects.filter(is_active=True).select_related("card", "seller")
     return render(request, "marketplace1/listing_list.html", {"listings": qs})
 
-
 def listing_detail(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
     return render(request, "marketplace1/listing_detail.html", {"listing": listing})
-
 
 @login_required
 def listing_buy(request, pk):

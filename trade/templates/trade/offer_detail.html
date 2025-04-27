@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Trade Offer #{{ offer.id }} Details – PokeTrade{% endblock %}
+
+{% block content %}
+  <h2>Trade Offer #{{ offer.id }}</h2>
+
+  <ul>
+    <li><strong>Date Sent:</strong>       {{ offer.date }}</li>
+    <li><strong>Offering User:</strong>   {{ offer.offered_by.username }}</li>
+    <li><strong>Card Offered:</strong>
+      {{ offer.card_offered.name }}
+      {% if offer.card_offered.rarity %} ({{ offer.card_offered.rarity }}){% endif %}
+    </li>
+    <li><strong>Requested Card:</strong>
+      {{ offer.listing.card.name }}
+      by {{ offer.listing.owner.username }}
+    </li>
+    <li><strong>Status:</strong>          {{ offer.choice }}</li>
+  </ul>
+
+  {% if offer.choice == 'PENDING' and request.user == offer.listing.owner %}
+    <form method="post" action="{% url 'trade:offer_response' offer.id %}">
+      {% csrf_token %}
+      <button type="submit" name="action" value="accept">Accept</button>
+      <button type="submit" name="action" value="reject">Reject</button>
+    </form>
+  {% endif %}
+
+  <a href="{% url 'trade:trade' %}">← Back to Trades</a>
+{% endblock %}

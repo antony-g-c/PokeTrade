@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>My Sent Offers</h2>
+<div id="container">
+  {% if sent_offers %}
+    {% for offer in sent_offers %}
+      <div class="offerItem" style="margin-bottom:16px;">
+        <p>On {{ offer.date }}, you offered <em>{{ offer.card_offered.name }}</em> to <strong>{{ offer.listing.owner.username }}</strong> for <em>{{ offer.listing.card.name }}</em>.</p>
+        <p>Status: <span class="inlist">{{ offer.choice }}</span></p>
+        {% if offer.choice == 'PENDING' %}
+          <form method="post" action="{% url 'trade:rescind_offer' offer.id %}">
+            {% csrf_token %}
+            <button type="submit" name="action" value="rescind" class="buttonToLink">Rescind Offer</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You have not sent any offers yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

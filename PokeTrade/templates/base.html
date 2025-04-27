@@ -1,14 +1,17 @@
+{# templates/base.html #}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokeTrade Marketplace</title>
+
+    {# Page title can be overridden by child templates #}
+    <title>{% block title %}PokeTrade{% endblock %}</title>
+
+    {# — Inline CSS (feel free to externalize later) — #}
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-        /* General Styles */
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -17,8 +20,6 @@
             background-color: #282828;
             color: white;
         }
-
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -30,14 +31,12 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-
         .header h1 {
             margin: 0;
             font-size: 26px;
             font-weight: bold;
             font-family: 'Brush Script MT', cursive;
         }
-
         .user-info {
             font-size: 20px;
             font-weight: 600;
@@ -48,50 +47,39 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
         }
-
-        /* Navbar */
         .navbar {
             display: flex;
             justify-content: center;
             background-color: #121212;
             padding: 10px 0;
             width: 100%;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-
-        .navbar.fixed {
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
         }
-
         .navbar ul {
             list-style: none;
-            padding: 0;
             margin: 0;
+            padding: 0;
             display: flex;
         }
-
         .navbar li {
             margin: 0 15px;
         }
-
-        /* Mobile Menu */
         .menu-toggle {
             display: none;
             font-size: 24px;
             cursor: pointer;
-            padding: 10px;
             background: none;
             border: none;
             color: white;
             position: absolute;
             left: 20px;
         }
-        .nav-link {
+        .nav-link, .buttonToLink {
             background: none;
             border: none;
             color: white;
@@ -101,81 +89,22 @@
             text-shadow: 0px 0px 8px rgba(0, 200, 255, 0.8);
             text-decoration: none;
             cursor: pointer;
-            width: auto;
-            font-family: 'Poppins', sans-serif;
-            display: inline-block;
             border-radius: 5px;
-            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            transition: transform 0.2s, background-color 0.2s;
         }
-        .nav-link:hover {
+        .nav-link:hover, .buttonToLink:hover {
             background-color: #282828;
             transform: scale(1.05);
         }
-        .buttonToLink {
-            background: #515151;
-            border: none;
-            color: white;
-            font-size: 16px;
-            padding: 10px 15px;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-            width: auto;
-            font-family: 'Poppins', sans-serif;
-            display: inline-block;
-            border-radius: 5px;
-            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-        }
-
-        /* Hover Effects */
-        .buttonToLink:hover {
-            background-color: white;
-            color: black;
-            transform: scale(1.05);
-        }
-
-        .nav-link:focus, .buttonToLink:focus {
-            outline: none;
-        }
-
-        /* Responsive Design */
         @media screen and (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .navbar {
-                justify-content: flex-start;
-                padding-left: 20px;
-                width: 100%;
-                display: none;
-                flex-direction: column;
-            }
-
-            .navbar.active {
-                display: flex;
-            }
-
-            .navbar ul {
-                flex-direction: column;
-                align-items: flex-start;
-                padding-left: 0;
-            }
-
-            .navbar li {
-                margin: 10px 0;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
+            .header { flex-direction: column; text-align: center; }
+            .navbar { display: none; flex-direction: column; padding-left: 20px; }
+            .navbar.active { display: flex; }
+            .navbar ul { flex-direction: column; align-items: flex-start; }
+            .navbar li { margin: 10px 0; }
+            .menu-toggle { display: block; }
         }
-        .user-menu {
-            position: relative;
-            display: inline-block;
-        }
-
+        .user-menu { position: relative; display: inline-block; }
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -188,13 +117,9 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
             z-index: 2000;
         }
-
-        .dropdown-menu a,
-        .dropdown-menu button {
-            display: flex;
+        .dropdown-menu a, .dropdown-menu button {
+            display: block;
             color: white;
-            text-shadow: 0px 0px 8px rgba(0, 200, 255, 0.8);
-            text-decoration: none;
             background: none;
             border: none;
             padding: 8px;
@@ -202,77 +127,90 @@
             text-align: left;
             cursor: pointer;
             font-size: 16px;
-            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            transition: transform 0.2s, background-color 0.2s;
         }
-
-        .dropdown-menu a:hover,
-        .dropdown-menu button:hover {
+        .dropdown-menu a:hover, .dropdown-menu button:hover {
             background-color: #333;
             transform: scale(1.05);
         }
     </style>
-</head>
-<body>
 
+    {# Child templates can inject additional <head> content here #}
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
     <!-- Header -->
     <div class="header">
-        <h1><img src="{% static 'images/banner.png' %}" alt="PokeTrade" style="height: 70px;"></h1>
+        <h1>
+            <img src="{% static 'images/banner.png' %}" alt="PokeTrade Logo" style="height:70px;">
+        </h1>
         <button class="menu-toggle" onclick="toggleMenu()">☰</button>
         <div class="user-menu">
             {% if user.is_authenticated %}
-                <div class="user-info" onclick="toggleDropdown()">{{ user.username }}</div>
+                <div class="user-info" onclick="toggleDropdown()">
+                    {{ user.username }}
+                </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="{% url 'password_change' %}">Change Password</a>
-                    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Logout</button></form>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
                 </div>
             {% else %}
-                <a href="{% url 'login' %}" class="user-info">Login</a>
+                <a href="{% url 'login' %}"  class="user-info">Login</a>
                 <a href="{% url 'signup' %}" class="user-info">Signup</a>
             {% endif %}
         </div>
     </div>
 
     <!-- Navigation Bar -->
-    <div class="navbar">
+    <div class="navbar" id="navbar">
         <ul>
-            <li><a href="{% url 'poke_card' %}" class="nav-link">Marketplace</a></li>
-            <li><a href="{% url 'trade' %}" class="nav-link">Trade</a></li>
+            <li><a href="{% url 'marketplace1:marketplace' %}" class="nav-link">Marketplace</a></li>
+            <li><a href="{% url 'trade:trade' %}"         class="nav-link">Trade</a></li>
             {% if user.is_authenticated %}
-                <li><a href="{% url 'my_collection' %}" class="nav-link">My Collection</a></li>
-                <li><a href="{% url 'my_offers' %}" class="nav-link">My Offers</a></li>
-                <li><a href="{% url 'create_listing' %}" class="nav-link">Create Listing</a></li>
+                <li><a href="{% url 'collection:collection' %}" class="nav-link">My Collection</a></li>
+                <li><a href="{% url 'trade:sent_offers' %}"      class="nav-link">My Offers</a></li>
+                <li><a href="{% url 'marketplace1:listing_create' %}" class="nav-link">Add Listing</a></li>
             {% else %}
                 <li><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
             {% endif %}
         </ul>
     </div>
 
-    <!-- Dynamic Content Section -->
-    {% block content %}
-    {% endblock %}
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {# Page-specific content goes here #}
+        {% endblock %}
+    </main>
 
+    <!-- Shared Scripts -->
     <script>
-        document.querySelectorAll('.nav-link, .buttonToLink').forEach(button => {
-            button.addEventListener('mouseenter', () => { button.style.transform = 'scale(1.05)'; });
-            button.addEventListener('mouseleave', () => { button.style.transform = 'scale(1)'; });
+        document.querySelectorAll('.nav-link, .buttonToLink').forEach(btn => {
+            btn.addEventListener('mouseenter', () => btn.style.transform = 'scale(1.05)');
+            btn.addEventListener('mouseleave', () => btn.style.transform = 'scale(1)');
         });
-        function toggleMenu() { document.querySelector('.navbar').classList.toggle('active'); }
-        window.addEventListener("scroll", function () {
-            var navbar = document.querySelector(".navbar");
-            var header = document.querySelector(".header");
-            if (window.scrollY > header.clientHeight) { navbar.classList.add("fixed"); } else { navbar.classList.remove("fixed"); }
+        function toggleMenu() { document.getElementById('navbar').classList.toggle('active'); }
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar')
+                    .classList.toggle('fixed', window.scrollY > document.querySelector('.header').clientHeight);
         });
-        function toggleDropdown() { var menu = document.getElementById("dropdownMenu"); menu.style.display = (menu.style.display === "block") ? "none" : "block"; }
-        window.onclick = function(event) {
-            if (!event.target.matches('.user-info')) {
-                var dropdowns = document.getElementsByClassName("dropdown-menu");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.style.display === "block") { openDropdown.style.display = "none"; }
-                }
-            }
+        function toggleDropdown() {
+            const dm = document.getElementById('dropdownMenu');
+            dm.style.display = dm.style.display === 'block' ? 'none' : 'block';
         }
+        window.onclick = e => {
+            if (!e.target.matches('.user-info')) {
+                document.querySelectorAll('.dropdown-menu')
+                        .forEach(dd => dd.style.display = 'none');
+            }
+        };
     </script>
 
+    {# Child templates can inject page-specific scripts here #}
+    {% block extra_scripts %}{% endblock %}
 </body>
 </html>

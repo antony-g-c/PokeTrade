@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="nav-link" style="pointer-events: none; font-size:30px;">Make an Offer</h1>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <label for="card_offered" class="nav-link" style="pointer-events: none; font-weight: bold;">Select a Card to Offer:</label>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1rem;">
+      {% for card in user_cards %}
+        <label style="display: flex; flex-direction: column; align-items: center; width: 150px; padding: 10px; border: 2px solid white; border-radius: 10px; cursor: pointer; transition: transform 0.2s;" class="card-box">
+          <input type="radio" name="card_offered" value="{{ card.id }}" style="margin-bottom: 0.5rem;">
+          <img src="{{ card.image }}" alt="{{ card.name }}" style="width: 100%; height: auto; border-radius: 8px;">
+          <span style="margin-top: 0.5rem;">{{ card.name }}</span>
+        </label>
+      {% empty %}
+        <p>No cards available to offer.</p>
+      {% endfor %}
+    </div>
+
+    <button  type="submit" class="card-box" style="margin-top: 2rem;">Send Offer</button>
+  </form>
+{% endblock %}

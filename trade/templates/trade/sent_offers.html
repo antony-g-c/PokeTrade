@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="nav-link" style="pointer-events: none; font-size: 30px;">My Sent Offers</h2>
+<div id="container">
+  {% if sent_offers %}
+    {% for offer in sent_offers %}
+      <div class="offerItem" style="margin-bottom:16px; padding: 1rem; border: 1px solid #ccc; border-radius: 10px;">
+        <p class="nav-link" style="pointer-events: none;">
+          On <strong>{{ offer.date|date:"M d, Y" }}</strong>, you offered
+            <img src="{{ offer.offered_card.image }}" alt="{{ offer.offered_card.name }}" style="width: 100px; height:auto;">
+          <em>{{ offer.offered_card.name }}</em>
+          to <strong>{{ offer.listing.owner.username }}</strong>
+          for <img src="{{ offer.listing.listed_card.image }}" alt="{{ offer.listing.listed_card.name }}" style="width: 100px; height:auto;"><em>{{ offer.listing.listed_card.name }}</em>.
+        </p>
+        <p>Status:
+          <span style=" text-shadow: none;
+            font-weight: bold;
+            {% if offer.choice == 'ACCEPTED' %}
+              color: green;
+            {% elif offer.choice == 'REJECTED' %}
+              color: red;
+            {% else %}
+              color: orange;
+            {% endif %}
+          ">
+            {{ offer.choice }}
+          </span>
+        </p>
+        {% if offer.choice == 'PENDING' %}
+          <form method="post" action="{% url 'trade:rescind_offer' offer.id %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to rescind this offer?');">
+            {% csrf_token %}
+            <button type="submit" class="card-box" style="color: red; border: none; background: none; cursor: pointer;">
+              Rescind Offer
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>You have not sent any offers yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

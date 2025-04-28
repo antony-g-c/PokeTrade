@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ myCard.name }} - Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .card-container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        img {
+            width: 200px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        a:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <img src="{{ myCard.image }}" alt="{{ myCard.name }}">
+        <h1>{{ myCard.name }}</h1>
+        <p><strong>Type:</strong> {{ myCard.type }}</p>
+        <p><strong>Description:</strong></p>
+        <p>{{ myCard.description }}</p>
+
+        <a href="{% url 'marketplace' %}">← Back to Marketplace</a>
+    </div>
+</body>
+</html>

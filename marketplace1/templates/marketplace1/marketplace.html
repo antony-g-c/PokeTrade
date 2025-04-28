@@ -1,0 +1,86 @@
+{# templates/marketplace.html #}
+{% extends 'base.html' %}
+
+{% block title %}Marketplace – PokeTrade{% endblock %}
+
+{% block content %}
+<div class="market-container" style="display: flex; gap: 2rem;">
+
+  <!-- Left column: All active listings + Search -->
+  <section style="flex: 2;">
+    <div id="searchbar" style="margin-bottom: 1rem;">
+      <form method="get" action="{% url 'marketplace1:marketplace' %}">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search listings…"
+          value="{{ request.GET.q }}"
+          style="width: 80%; padding: 0.5rem; border-radius: 20px; border: none;"
+        />
+        <button type="submit" class="buttonToLink">Search</button>
+      </form>
+    </div>
+
+    <h2>All Listings</h2>
+    <a
+      href="{% url 'marketplace1:listing_create' %}"
+      class="buttonToLink"
+      style="float: right; margin-top: -2rem;"
+    >+ New Listing</a>
+
+    <ul>
+      {% for listing in listings %}
+        <li>
+          <a href="{% url 'marketplace1:listing_detail' listing.pk %}">
+            {{ listing.card.name }} — ${{ listing.price }}
+          </a>
+          by {{ listing.seller.username }}
+        </li>
+      {% empty %}
+        <li>No active listings.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- Right column: My Orders & My Listings -->
+  <aside style="flex: 1;">
+    <section style="margin-bottom: 2rem;">
+      <h3>My Orders</h3>
+      {% if orders %}
+        <ul>
+          {% for order in orders %}
+            <li>
+              <a href="{% url 'orders:detail' order.id %}">
+                Order #{{ order.id }} on {{ order.date }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No orders yet.</p>
+      {% endif %}
+    </section>
+
+    <section>
+      <h3>
+        My Listings
+        <a href="{% url 'marketplace1:listing_create' %}" class="buttonToLink">+</a>
+      </h3>
+      {% if my_listings %}
+        <ul>
+          {% for listing in my_listings %}
+            <li>
+              <a href="{% url 'marketplace1:listing_detail' listing.pk %}">
+                {{ listing.card.name }} — ${{ listing.price }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No active listings.</p>
+      {% endif %}
+    </section>
+  </aside>
+
+</div>
+{% endblock %}

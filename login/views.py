@@ -17,7 +17,7 @@ from django.core.mail import EmailMessage
 
 # Create your views here.
 def home(request):
-    return render(request, 'registration/login.html')
+    return redirect('marketplace1:marketplace')
 
 def signup(request):
     if request.method == 'POST':  

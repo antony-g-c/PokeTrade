@@ -4,9 +4,10 @@
 {% block content %}
   <h2>Order #{{ order.id }}</h2>
 
-  <ul>
+  <ul style="list-style: none;">
+    <img src="{{ order.purchased_card.image }}" alt="{{ order.purchased_card.name }}" style="width:250px; height:auto; margin-bottom:0.5rem;">
     <li><strong>Date:</strong>      {{ order.date }}</li>
-    <li><strong>Card:</strong>      {{ order.card.name }}</li>
+    <li><strong>Card:</strong>      {{ order.purchased_cardcard.name }}</li>
     <li><strong>Seller:</strong>    {{ order.seller.username }}</li>
     <li><strong>Total Cost:</strong> ${{ order.total }}</li>
     {% if order.quantity %}
@@ -17,5 +18,5 @@
     {% endif %}
   </ul>
 
-  <a href="{% url 'marketplace1:marketplace' %}">← Back to Marketplace</a>
+  <a href="{% url 'marketplace1:marketplace' %}" class="card-box">← Back to Marketplace</a>
 {% endblock %}

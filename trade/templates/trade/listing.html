@@ -6,35 +6,54 @@
 <div class="market-container" style="display: flex; gap: 2rem;">
 
   <!-- Left column: Available trade listings -->
-  <section style="flex: 2;">
-    <h2>Available Cards for Trade</h2>
+  <section style="flex: 1;">
+    <div id="searchbar" style="margin-bottom: 1rem;">
+      <form method="get" action="{% url 'trade:listing' %}" style="display: flex; align-items: left; gap: 0.5rem;">
+          <input
+            type="text"
+            name="q"
+            placeholder="Search listings..."
+            value="{{ request.GET.q }}"
+            style="width: 60%; padding: 0.5rem; border-radius: 20px; border: none;"
+          />
+          <button
+            type="submit"
+            class="card-box"
+            style="padding: 10px 20px; font-size: 14px; width: auto;">
+            Search
+          </button>
+      </form>
+    </div>
+    <h2 class="nav-link" style="pointer-events: none; font-size: 30px;">Available Cards for Trade</h2>
 
     <a
       href="{% url 'trade:create_listing' %}"
-      class="buttonToLink"
+      class="card-box"
       style="float: right; margin-top: -2rem;"
     >+ New Trade Listing</a>
 
-    <ul>
+    <ul style="list-style: none;">
       {% for listing in listings %}
-        <li>
-          <a href="{% url 'trade:offer' listing.pk %}">
-            Offer on {{ listing.listed_card.name }}
-          </a>
-          — Owned by {{ listing.owner.username }}
-        </li>
+            <li>
+                <div>
+                  <a href="{% url 'trade:offer' listing.pk %}"  class="card-box" style="display: block; text-align: center;">
+                      <img src="{{ listing.listed_card.image }}" alt="{{ listing.listed_card.name }}" style="width:250px; height:auto; margin-bottom:0.5rem;">
+                      <div>Offer on {{ listing.listed_card.name }}</div>
+                      <div>— Owned by {{ listing.owner.username }}</div>
+                  </a>
+                </div>
+            </li>
       {% empty %}
-        <li>No cards currently available for trade.</li>
+        <li class="nav-link" style="pointer-events: none;">No cards currently available for trade.</li>
       {% endfor %}
     </ul>
   </section>
 
   <!-- Right column: Quick Navigation -->
-  <aside style="flex: 1;">
-    <h3>Manage</h3>
-    <ul>
-      <li><a href="{% url 'trade:offer_management' %}" class="buttonToLink">Manage Offers</a></li>
-      <li><a href="{% url 'trade:create_listing' %}" class="buttonToLink">New Listing</a></li>
+  <aside style="flex: 0.5;">
+    <ul style="list-style: none;">
+      <li><a href="{% url 'trade:offer_management' %}" class="card-box"
+      style="float: left; margin-top: 6.6rem;">Manage Offers</a></li>
     </ul>
   </aside>
 

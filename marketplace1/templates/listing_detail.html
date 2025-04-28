@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>{{ listing.card.name }} — ${{ listing.price }}</h1>
-  <p>Seller: {{ listing.seller.username }}</p>
+  <div class="card-box">
+      <h1>{{ listing.card.name }} — ${{ listing.price }}</h1>
+      <img src="{{ listing.card.image }}" alt="{{ listing.card.name }}" style="width:250px; height:auto; margin-bottom:0.5rem;">
+      <p>Seller: {{ listing.seller.username }}</p>
+  </div>
   {% if user.is_authenticated %}
     <form method="post" action="{% url 'marketplace1:listing_buy' listing.pk %}">
       {% csrf_token %}
-      <button type="submit">Buy Now</button>
+      <button type="submit" class="card-box">Buy Now</button>
     </form>
   {% else %}
-    <p><a href="{% url 'login' %}">Log in</a> to buy.</p>
+      <p><a href="{% url 'login' %}" class="card-box">Log in</a> <span class="nav-link" style="pointer-events: none;">to buy.</span></p>
   {% endif %}
 {% endblock %}

@@ -1,12 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	{% if card_count == 0 %}
-        <h2>No cards in collection</h2>
-    {% else %}
-        {% for card in cards %}
-            <img src="{{ card.image }}" alt="{{ card.name }}">
-            <h2>{{ card.name }}</h2>
-        {% endfor %}
-    {% endif %}
+
+<!-- Search Bar -->
+<div id="searchbar" style="margin-bottom: 1rem;">
+  <form method="get" action="{% url 'collection:collection' %}" style="display: flex; align-items: center; gap: 0.5rem;">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search your collection..."
+      value="{{ request.GET.q }}"
+      style="width: 60%; padding: 0.5rem; border-radius: 20px; border: none;"
+    />
+    <button
+      type="submit"
+      class="card-box"
+      style="padding: 10px 20px; font-size: 14px; width: auto;">
+      Search
+    </button>
+  </form>
+</div>
+
+<!-- Collection -->
+{% if card_count == 0 %}
+  <h2 class="nav-link" style="pointer-events: none;">No cards in collection</h2>
+{% else %}
+  <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+    {% for card in cards %}
+      <div class="card-box" style="width: 180px; text-align: center; transition: transform 0.2s;">
+        <img src="{{ card.image }}" alt="{{ card.name }}" style="width: 100%; height: auto; border-radius: 8px;">
+        <h2 style="font-size: 1rem; margin-top: 0.5rem;">{{ card.name }}</h2>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 {% endblock %}

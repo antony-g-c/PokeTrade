@@ -133,6 +133,28 @@
             background-color: #333;
             transform: scale(1.05);
         }
+        .card-box {
+          color: white;
+          font-size: 16px;
+          font-weight: bold;
+          padding: 10px 15px;
+          text-shadow: 0px 0px 8px rgba(0, 200, 255, 0.8);
+          text-decoration: none;
+          cursor: pointer;
+          border-radius: 5px;
+          background-color: #1f1f1f;
+          border-radius: 12px;
+          padding: 1rem;
+          width: 300px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+          transition: transform 0.2s, box-shadow 0.2s;
+          display: block;
+          text-align: center;"
+        }
+        .card-box:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
     </style>
 
     {# Child templates can inject additional <head> content here #}
@@ -143,7 +165,7 @@
     <!-- Header -->
     <div class="header">
         <h1>
-            <img src="{% static 'images/banner.png' %}" alt="PokeTrade Logo" style="height:70px;">
+            <img src="{% static 'images/logo.png' %}" alt="PokeTrade Logo" style="height:100px;">
         </h1>
         <button class="menu-toggle" onclick="toggleMenu()">☰</button>
         <div class="user-menu">
@@ -152,15 +174,14 @@
                     {{ user.username }}
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="{% url 'password_change' %}">Change Password</a>
+                    <a href="{% url 'password_change' %}" class="card-box">Change Password</a>
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button type="submit">Logout</button>
+                        <button type="submit" class="card-box" style="font-size: 17px;">Logout</button>
                     </form>
                 </div>
             {% else %}
-                <a href="{% url 'login:login' %}"  class="user-info">Login</a>
-                <a href="{% url 'login:signup' %}" class="user-info">Signup</a>
+                <a href="{% url 'login:login' %}"  class="card-box">Login</a>
             {% endif %}
         </div>
     </div>
@@ -174,7 +195,6 @@
                 <li><a href="{% url 'collection:collection' %}" class="nav-link">My Collection</a></li>
                 <li><a href="{% url 'trade:offer_management' %}" class="nav-link">My Offers</a></li>
                 <li><a href="{% url 'trade:sent_offers' %}" class="nav-link">My Sent Offers</a></li>
-                <li><a href="{% url 'marketplace1:listing_create' %}" class="nav-link">Add Listing</a></li>
             {% else %}
                 <li><a href="{% url 'login:signup' %}" class="nav-link">Signup</a></li>
             {% endif %}

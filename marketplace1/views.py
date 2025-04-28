@@ -3,9 +3,11 @@ from django.http import HttpResponse
 from .models import Card, Listing
 from django.template import loader
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from .forms import ListingForm
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from orders.models import Order
+from marketplace1.models import Listing
 
 def poke_card(request):
     myCard = Card.objects.all().values()
@@ -41,9 +43,6 @@ def listing_create(request):
         form = ListingForm(user=request.user)
 
     return render(request, "marketplace1/listing_form.html", {"form": form})
-def listing_list(request):
-    qs = Listing.objects.filter(is_active=True).select_related("card", "seller")
-    return render(request, "listing_list.html", {"listings": qs})
 
 def listing_detail(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
@@ -74,6 +73,31 @@ def listing_buy(request, pk):
         messages.success(request, f"You bought {card.name} for ${listing.price}!")
     return redirect("marketplace1:marketplace")
 
+from orders.models import Order
+from marketplace1.models import Listing  # Just making sure you imported
+
+from django.contrib.auth.decorators import login_required
+
+
 def marketplace(request):
+    query = request.GET.get('q', '')  # Get search query from URL
+
     listings = Listing.objects.filter(is_active=True).select_related('card', 'seller')
-    return render(request, 'marketplace.html', {'listings': listings})
+
+    orders = None
+    my_listings = None
+    if query:
+        listings = listings.filter(
+            Q(card__name__icontains=query) |
+            Q(card__pokemon__icontains=query)
+        )
+    if request.user.is_authenticated:
+        orders = Order.objects.filter(user=request.user).order_by('-date')
+        my_listings = Listing.objects.filter(seller=request.user, is_active=True)
+
+    return render(request, 'marketplace.html', {
+        'listings': listings,
+        'orders': orders,
+        'my_listings': my_listings,
+        'query': query,
+    })

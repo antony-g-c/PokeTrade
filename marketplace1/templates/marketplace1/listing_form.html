@@ -1,9 +1,30 @@
 {% extends "base.html" %}
+
 {% block content %}
-  <h1>List a Card for Sale</h1>
+  <h1 class="nav-link" style="pointer-events: none; font-size: 30px;">List a Card for Sale</h1>
+
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">List for Sale</button>
+
+    <label for="card" class="nav-link" style="pointer-events: none;">Select a Card to List:</label>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1rem;">
+      {% for card in form.fields.card.queryset %}
+        <label style="display: flex; flex-direction: column; align-items: center; width: 150px; padding: 10px; border: 2px solid white; border-radius: 10px; cursor: pointer; transition: transform 0.2s;" class="card-box">
+          <input type="radio" name="card" value="{{ card.id }}" style="margin-bottom: 0.5rem;">
+          <img src="{{ card.image }}" alt="{{ card.name }}" style="width: 100%; height: auto; border-radius: 8px;">
+          <span style="margin-top: 0.5rem;">{{ card.name }}</span>
+        </label>
+      {% empty %}
+        <p>No cards available for listing.</p>
+      {% endfor %}
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <label for="price" class="nav-link" style="pointer-events: none;">Price:</label><br>
+      {{ form.price }}
+    </div>
+
+    <button class="card-box" type="submit" style="margin-top: 2rem;">List for Sale</button>
   </form>
 {% endblock %}

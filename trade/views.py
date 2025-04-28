@@ -4,7 +4,7 @@ from .models import OfferTrade, ListingForTrading
 from marketplace1.models import Card
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
 
 def trade(request):
     if request.method == "POST":
@@ -34,7 +34,15 @@ def offer(request, id):
     user_cards = Card.objects.filter(owner=request.user)
     return render(request, "trade/make_offer.html", {"listing": listing, "user_cards": user_cards})
 def listing(request):
+    query = request.GET.get('q')
     listings = ListingForTrading.objects.filter(is_open=True)
+
+    if query:
+        listings = listings.filter(
+            Q(listed_card__name__icontains=query) |
+            Q(listed_card__pokemon__icontains=query)
+        )
+
     return render(request, "trade/listing.html", {"listings": listings})
 
 @login_required

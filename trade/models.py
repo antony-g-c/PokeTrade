@@ -33,7 +33,7 @@ class OfferTrade(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Offer by {self.offered_by.username} on {self.listing.card.name} ({self.choice})"
+        return f"Offer by {self.offered_by.username} on {self.listing.listed_card.name} ({self.choice})"
 
     class Meta:
         ordering = ["-date"]

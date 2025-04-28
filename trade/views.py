@@ -15,9 +15,12 @@ def trade(request):
     return render(request, "trade/trade.html", {"cards": Card.objects.all()})
 
 @require_http_methods(["GET", "POST"])
-@login_required
 def offer(request, id):
     listing = get_object_or_404(ListingForTrading, pk=id, is_open=True)
+
+    if not request.user.is_authenticated:
+        # No form logic if not logged in
+        return render(request, "trade/make_offer.html", {"listing": listing, "user_cards": None})
 
     if request.method == "POST":
         card_offered_id = request.POST.get("card_offered")
@@ -30,7 +33,7 @@ def offer(request, id):
             messages.success(request, f"You offered {card_offered.name} for {listing.listed_card.name}.")
         return redirect("trade:sent_offers")
 
-    # If GET request, show a form to choose which card to offer
+    # If GET and logged in
     user_cards = Card.objects.filter(owner=request.user)
     return render(request, "trade/make_offer.html", {"listing": listing, "user_cards": user_cards})
 def listing(request):

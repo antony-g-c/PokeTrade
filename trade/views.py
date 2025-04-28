@@ -82,6 +82,17 @@ def create_listing(request):
         return redirect("trade:listing")
     cards = Card.objects.filter(owner=request.user)
     return render(request, "trade/create_listing.html", {"cards": cards})
+
+@login_required
+def trade_listing_delete(request, pk):
+    listing = get_object_or_404(ListingForTrading, pk=pk, owner=request.user, is_open=True)
+
+    if request.method == "POST":
+        listing.delete()
+        messages.success(request, "Trade listing deleted successfully.")
+        return redirect("trade:offer_management")
+
+    return render(request, "trade/confirm_delete.html", {"listing": listing})
 @login_required
 def sent_offers(request):
     offers = OfferTrade.objects.filter(offered_by=request.user)

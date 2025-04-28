@@ -10,6 +10,9 @@
       {% csrf_token %}
       <button type="submit" class="card-box">Buy Now</button>
     </form>
+    {% if listing.seller == user and listing.is_active %}
+      <a href="{% url 'marketplace1:listing_delete' listing.pk %}" class="card-box">Delete Listing</a>
+    {% endif %}
   {% else %}
       <p><a href="{% url 'login' %}" class="card-box">Log in</a> <span class="nav-link" style="pointer-events: none;">to buy.</span></p>
   {% endif %}

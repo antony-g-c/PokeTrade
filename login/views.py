@@ -26,7 +26,7 @@ def signup(request):
             user=form.save()
             login(request, user)
             generatePokemon(5, user)
-            return redirect('collection')
+            return redirect('collection:collection')
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form':form})

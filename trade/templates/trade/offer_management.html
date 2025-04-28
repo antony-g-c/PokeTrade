@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Offer Management – PokeTrade{% endblock %}
+
+{% block content %}
+<h2>My Trade Listings & Offers</h2>
+
+{% if listings %}
+  <ul>
+    {% for listing in listings %}
+      <li style="margin-bottom: 2rem;">
+        <strong style="font-size: 1.2rem;">{{ listing.listed_card.name }}</strong> ({{ listing.date }})
+        {% if listing.is_open %}
+          — <span style="color: green; font-weight: bold; font-size: 1rem;">Open for offers</span>
+        {% else %}
+          — <span style="color: red; font-weight: bold; font-size: 1rem;">Closed</span>
+        {% endif %}
+
+        <ul style="margin-top: 1rem;">
+          {% for offer in listing.offers.all %}
+            <li style="margin-bottom: 1.5rem;">
+              {{ offer.offered_card.name }} offered by {{ offer.offered_by.username }}
+
+              {% if listing.is_open %}
+                {% if offer.choice == "PENDING" %}
+                  <form method="post" action="{% url 'trade:offer_response' offer.id %}">
+                    {% csrf_token %}
+                    <button name="action" value="accept" type="submit">Accept</button>
+                    <button name="action" value="reject" type="submit">Reject</button>
+                  </form>
+                {% elif offer.choice == "ACCEPTED" %}
+                  <div style="font-size: 0.9rem; color: green; font-weight: 500; margin-top: 0.5rem; font-family: 'Courier New', monospace;">
+                    Accepted ✅
+                  </div>
+                {% elif offer.choice == "REJECTED" %}
+                  <div style="font-size: 0.9rem; color: red; font-weight: 500; margin-top: 0.5rem; font-family: 'Courier New', monospace;">
+                    Rejected ❌
+                  </div>
+                {% endif %}
+              {% else %}
+                {% if offer.choice == "ACCEPTED" %}
+                  <div style="font-size: 0.9rem; color: green; font-weight: 500; margin-top: 0.5rem; font-family: 'Courier New', monospace;">
+                    Accepted ✅
+                  </div>
+                {% elif offer.choice == "REJECTED" %}
+                  <div style="font-size: 0.9rem; color: red; font-weight: 500; margin-top: 0.5rem; font-family: 'Courier New', monospace;">
+                    Rejected ❌
+                  </div>
+                {% endif %}
+              {% endif %}
+            </li>
+          {% empty %}
+            <li>No offers yet.</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No trade listings found.</p>
+{% endif %}
+{% endblock %}

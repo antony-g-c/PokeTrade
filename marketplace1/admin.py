@@ -2,11 +2,6 @@ from django.contrib import admin
 
 from .models import Card, Listing
 
-# Register your models here.
-@admin.register(Card)
-class CardAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner_id")
-
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):
     list_display  = ("card", "seller", "price", "is_active", "created_at")

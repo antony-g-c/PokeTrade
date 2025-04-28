@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Trading - PokeTrade{% endblock %}
+
+{% block content %}
+<div class="trade-container" style="display: flex; gap: 2rem;">
+
+  <!-- Left: Available trades -->
+  <section style="flex: 2;">
+    <div id="searchbar">
+      <form method="get" action="{% url 'trade:trade' %}">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search trades..."
+          value="{{ request.GET.q }}"
+          style="width: 100%; padding: 0.5rem; border-radius: 20px; border: none;"
+        />
+        <button type="submit" class="buttonToLink">Search</button>
+      </form>
+    </div>
+
+    <h2>Available Trades</h2>
+    <ul>
+      {% for t in trade_listings %}
+        <li>
+          <a href="{% url 'trade:details' t.pk %}">
+            {{ t.card.name }} (by {{ t.owner.username }})
+          </a>
+        </li>
+      {% empty %}
+        <li>No open trades.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- Right: Incoming requests & My trade listings -->
+  <aside style="flex: 1;">
+    <section style="margin-bottom: 2rem;">
+      <h3>Trade Requests</h3>
+      {% if incoming_requests %}
+        <ul>
+          {% for offer in incoming_requests %}
+            <li>
+              <a href="{% url 'trade:offer_detail' offer.pk %}">
+                {{ offer.offered_by.username }} offered {{ offer.card_offered.name }}
+                on {{ offer.date|date:"M d, Y" }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No incoming requests.</p>
+      {% endif %}
+    </section>
+
+    <section>
+      <h3>
+        My Trade Listings
+        <a href="{% url 'trade:create_listing' %}" class="buttonToLink">+</a>
+      </h3>
+      {% if my_trades %}
+        <ul>
+          {% for t in my_trades %}
+            <li>
+              <a href="{% url 'trade:details' t.pk %}">
+                {{ t.card.name }} (open)
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No active trade listings.</p>
+      {% endif %}
+    </section>
+  </aside>
+
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from collection.models import Card
 from django.conf import settings
 
 def get_admin_user():
@@ -7,19 +8,6 @@ def get_admin_user():
         return User.objects.get(username='admin').id
     except User.DoesNotExist:
         return None
-# Create your models here.
-class Card(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    image = models.URLField() 
-    type = models.CharField(max_length=250)
-    price = models.DecimalField(max_digits=20, decimal_places=2)
-    owner_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cards',  default=get_admin_user())  # Added owner field
-
-
-    def __str__(self):
-        return self.name
-
 
 class Listing(models.Model):
     card       = models.ForeignKey(Card,

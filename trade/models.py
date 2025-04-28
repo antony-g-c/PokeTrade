@@ -9,13 +9,13 @@ def get_admin_user():
         return None
 
 class ListingForTrading(models.Model):
-    card = models.ForeignKey('marketplace1.Card', on_delete=models.CASCADE, related_name='trade_listings')
+    listed_card = models.ForeignKey('collection.Card', on_delete=models.CASCADE, related_name='trade_listings')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trade_listings', default=get_admin_user())
     is_open = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Trading listing for {self.card.name} by {self.owner.username}"
+        return f"Trading listing for {self.listed_card.name} by {self.owner.username}"
 
     class Meta:
         ordering = ["-date"]
@@ -23,7 +23,7 @@ class ListingForTrading(models.Model):
 class OfferTrade(models.Model):
     listing = models.ForeignKey(ListingForTrading, on_delete=models.CASCADE, related_name='offers')
     offered_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trade_offers')
-    card_offered = models.ForeignKey('marketplace1.Card', on_delete=models.CASCADE, related_name='trade_offers')
+    offered_card = models.ForeignKey('collection.Card', on_delete=models.CASCADE, related_name='trade_offers')
     CHOICES = [
         ("PENDING", "Pending"),
         ("ACCEPTED", "Accepted"),

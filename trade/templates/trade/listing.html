@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Trade Listings – PokeTrade{% endblock %}
+
+{% block content %}
+<div class="market-container" style="display: flex; gap: 2rem;">
+
+  <!-- Left column: Available trade listings -->
+  <section style="flex: 2;">
+    <h2>Available Cards for Trade</h2>
+
+    <a
+      href="{% url 'trade:create_listing' %}"
+      class="buttonToLink"
+      style="float: right; margin-top: -2rem;"
+    >+ New Trade Listing</a>
+
+    <ul>
+      {% for listing in listings %}
+        <li>
+          <a href="{% url 'trade:offer' listing.pk %}">
+            Offer on {{ listing.listed_card.name }}
+          </a>
+          — Owned by {{ listing.owner.username }}
+        </li>
+      {% empty %}
+        <li>No cards currently available for trade.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- Right column: Quick Navigation -->
+  <aside style="flex: 1;">
+    <h3>Manage</h3>
+    <ul>
+      <li><a href="{% url 'trade:offer_management' %}" class="buttonToLink">Manage Offers</a></li>
+      <li><a href="{% url 'trade:create_listing' %}" class="buttonToLink">New Listing</a></li>
+    </ul>
+  </aside>
+
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Make an Offer{% endblock %}
+
+{% block content %}
+<h2>Offer a Card for {{ listing.listed_card.name }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <label for="card_offered">Select a Card:</label>
+  <select name="card_offered" required>
+    {% for card in user_cards %}
+      <option value="{{ card.id }}">{{ card.name }}</option>
+    {% empty %}
+      <option disabled>No cards available to offer.</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Submit Offer</button>
+</form>
+{% endblock %}

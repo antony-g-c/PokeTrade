@@ -159,8 +159,8 @@
                     </form>
                 </div>
             {% else %}
-                <a href="{% url 'login' %}"  class="user-info">Login</a>
-                <a href="{% url 'signup' %}" class="user-info">Signup</a>
+                <a href="{% url 'login:login' %}"  class="user-info">Login</a>
+                <a href="{% url 'login:signup' %}" class="user-info">Signup</a>
             {% endif %}
         </div>
     </div>
@@ -172,15 +172,34 @@
             <li><a href="{% url 'trade:trade' %}"         class="nav-link">Trade</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'collection:collection' %}" class="nav-link">My Collection</a></li>
-                <li><a href="{% url 'trade:sent_offers' %}"      class="nav-link">My Offers</a></li>
+                <li><a href="{% url 'trade:offer_management' %}" class="nav-link">My Offers</a></li>
+                <li><a href="{% url 'trade:sent_offers' %}" class="nav-link">My Sent Offers</a></li>
                 <li><a href="{% url 'marketplace1:listing_create' %}" class="nav-link">Add Listing</a></li>
             {% else %}
-                <li><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
+                <li><a href="{% url 'login:signup' %}" class="nav-link">Signup</a></li>
             {% endif %}
         </ul>
     </div>
 
     <!-- Main Content -->
+    {% if messages %}
+      <div style="margin: 1rem auto; max-width: 800px;">
+        {% for message in messages %}
+          <div class="flash-message" style="
+            background-color: {% if message.tags == 'success' %}#4CAF50{% elif message.tags == 'error' %}#f44336{% else %}#333{% endif %};
+            color: white;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            transition: opacity 1s ease-out;
+          ">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
     <main>
         {% block content %}
         {# Page-specific content goes here #}
@@ -212,5 +231,14 @@
 
     {# Child templates can inject page-specific scripts here #}
     {% block extra_scripts %}{% endblock %}
+    <script>
+        // Auto-fade success/error messages
+        setTimeout(() => {
+            document.querySelectorAll('.flash-message').forEach(msg => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.style.display = 'none', 1000); // After fade out
+            });
+        }, 3000); // Start fading after 3 seconds
+    </script>
 </body>
 </html>

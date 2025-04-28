@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('collection/', include('collection.urls')),
-    path('', include('login.urls')),
-    path('marketplace/', include('marketplace1.urls')),
-    path('trade/', include('trade.urls')),
+    path('marketplace1/', include(('marketplace1.urls', 'marketplace1'), namespace='marketplace1')),
+    path('trade/', include(('trade.urls', 'trade'), namespace='trade')),
+    path('orders/', include(('orders.urls', 'orders'), namespace='orders')),
+    path('', include(('collection.urls', 'collection'), namespace='collection')),
+    path('login/', include(('login.urls', 'login'), namespace='login')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

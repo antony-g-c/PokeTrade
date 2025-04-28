@@ -147,4 +147,4 @@ EMAIL_HOST_USER = 'jamnt3@gmail.com'
 EMAIL_HOST_PASSWORD = 'ikoxtmueakfmejok'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'GT Movie Store <noreply@gtmoviestore.com>'
+DEFAULT_FROM_EMAIL = 'PokeTrade <noreply@poketrade.com>'

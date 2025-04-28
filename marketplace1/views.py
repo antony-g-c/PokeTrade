@@ -1,30 +1,52 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Card, Listing
 from django.template import loader
 from django.contrib import messages
 from .forms import ListingForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from orders.models import Order
-from marketplace1.models import Listing
+import requests
+
+
+from .models import Card
 
 def poke_card(request):
-    myCard = Card.objects.all().values()
-    template = loader.get_template('poke_card.html')
-    context = {
-        'myCard': myCard,
-    }
-    return HttpResponse(template.render(context, request))
+    cards = Card.objects.all()
+    return render(request, 'poke_card.html', {'cards': cards})
+
 
 def details(request, id):
-    myCard = Card.objects.get(id=id)
-    template = loader.get_template('details.html')
-    context = {
-        'myCard': myCard,
-    }
-    return HttpResponse(template.render(context, request))
+    myCard = get_object_or_404(Card, id=id)
 
+    extra_info = {}
+
+    # Only if card has a valid image URL
+    if myCard.image:
+        # Example: https://images.pokemontcg.io/xy5/48.png
+        try:
+            parts = myCard.image.split('/')
+            set_id = parts[-2]  # e.g., 'xy5'
+            card_number = parts[-1].replace('.png', '')  # e.g., '48'
+            tcg_id = f"{set_id}-{card_number}"  # e.g., 'xy5-48'
+
+            url = f"https://api.pokemontcg.io/v2/cards/{tcg_id}"
+            headers = {"X-Api-Key": "YOUR-API-KEY"}  # Replace or remove if not needed
+            response = requests.get(url, headers=headers)
+
+            if response.status_code == 200:
+                data = response.json().get('data', {})
+                extra_info = {
+                    'name': data.get('name'),
+                    'set': data.get('set', {}).get('name'),
+                    'rarity': data.get('rarity'),
+                    'subtypes': data.get('subtypes', []),
+                    'number': data.get('number'),
+                    'prices': data.get('tcgplayer', {}).get('prices', {}),
+                }
+        except Exception as e:
+            print("Error fetching TCG info:", e)
+
+    return render(request, 'details.html', {'myCard': myCard, 'extra_info': extra_info})
 @login_required
 def listing_create(request):
     if request.method == "POST":
@@ -76,7 +98,16 @@ def listing_buy(request, pk):
 from orders.models import Order
 from marketplace1.models import Listing  # Just making sure you imported
 
-from django.contrib.auth.decorators import login_required
+@login_required
+def listing_delete(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user, is_active=True)
+
+    if request.method == "POST":
+        listing.delete()
+        messages.success(request, "Listing deleted successfully.")
+        return redirect("marketplace1:marketplace")
+
+    return render(request, "marketplace1/confirm_delete.html", {"listing": listing})
 
 
 def marketplace(request):

@@ -191,6 +191,7 @@
         <ul>
             <li><a href="{% url 'marketplace1:marketplace' %}" class="nav-link">Marketplace</a></li>
             <li><a href="{% url 'trade:trade' %}"         class="nav-link">Trade</a></li>
+            <li><a href="{% url 'marketplace1:poke_card' %}" class="nav-link">All Cards</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'collection:collection' %}" class="nav-link">My Collection</a></li>
                 <li><a href="{% url 'trade:offer_management' %}" class="nav-link">My Offers</a></li>

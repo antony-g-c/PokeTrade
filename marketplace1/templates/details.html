@@ -1,64 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ myCard.name }} - Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            text-align: center;
-        }
+{% extends "base.html" %}
 
-        .card-container {
-            max-width: 600px;
-            margin: 0 auto;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+{% block title %}{{ myCard.name }} – Card Details{% endblock %}
 
-        img {
-            width: 200px;
-            height: auto;
-            object-fit: contain;
-            margin-bottom: 20px;
-        }
+{% block content %}
+<div style="max-width: 600px; margin: 2rem auto; padding: 2rem; background-color: #121212; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.5); text-align: center;">
 
-        h1 {
-            margin-bottom: 10px;
-        }
+  <img src="{{ myCard.image }}" alt="{{ myCard.name }}" style="width: 200px; height: auto; margin-bottom: 1rem; border-radius: 12px;">
 
-        p {
-            font-size: 16px;
-            margin: 5px 0;
-        }
+  <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">{{ myCard.name }}</h1>
 
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
+  {% if extra_info %}
+    <div style="margin-top: 1rem; font-size: 1rem;">
+      <p><strong>Set:</strong> {{ extra_info.set }}</p>
+      <p><strong>Rarity:</strong> {{ extra_info.rarity }}</p>
+      <p><strong>Subtype:</strong> {{ extra_info.subtypes|join:", " }}</p>
+      <p><strong>Card Number:</strong> {{ extra_info.number }}</p>
 
-        a:hover {
-            background: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="card-container">
-        <img src="{{ myCard.image }}" alt="{{ myCard.name }}">
-        <h1>{{ myCard.name }}</h1>
-        <p><strong>Type:</strong> {{ myCard.type }}</p>
-        <p><strong>Description:</strong></p>
-        <p>{{ myCard.description }}</p>
-
-        <a href="{% url 'marketplace' %}">← Back to Marketplace</a>
+      {% if extra_info.prices.normal %}
+        <p><strong>Market Price:</strong> ${{ extra_info.prices.normal.market|floatformat:2 }}</p>
+      {% else %}
+        <p><strong>Market Price:</strong> Not Available</p>
+      {% endif %}
     </div>
-</body>
-</html>
+  {% else %}
+    <p style="margin-top: 1rem; font-style: italic; color: #888;">Extra information not available for this card.</p>
+  {% endif %}
+
+  <a href="{% url 'marketplace1:poke_card' %}" class="buttonToLink" style="margin-top: 2rem; display: inline-block;">← Back to Catalog</a>
+</div>
+{% endblock %}

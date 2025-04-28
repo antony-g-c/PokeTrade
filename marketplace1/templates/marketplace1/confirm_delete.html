@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding: 2rem;">
+    <h2>Are you sure you want to delete "{{ listing.card.name }}"?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="card-box" style="margin-right: 10px;">Yes, Delete</button>
+        <a href="{% url 'marketplace1:marketplace' %}" class="card-box">Cancel</a>
+    </form>
+</div>
+{% endblock %}

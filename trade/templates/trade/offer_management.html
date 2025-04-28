@@ -14,6 +14,9 @@
             <div><strong style="font-size: 1.2rem;">{{ listing.listed_card.name }}</strong> ({{ listing.date }})
             {% if listing.is_open %}
               — <span style="color: green; font-weight: bold; font-size: 1rem; text-shadow: none;">Open for offers</span>
+                {% if listing.owner == user and listing.is_open %}
+                  <a href="{% url 'trade:trade_listing_delete' listing.pk %}" class="card-box" style="width: auto;">Delete Listing</a>
+                {% endif %}
             {% else %}
               — <span style="color: red; font-weight: bold; font-size: 1rem; text-shadow: none;">Closed</span>
             {% endif %}</div>

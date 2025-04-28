@@ -10,6 +10,7 @@ urlpatterns = [
     path("response/<int:id>", views.offer_response, name="offer_response"),
     path("", views.trade, name="trade"),
     path("offer_management/", views.offer_management, name="offer_management"),
+    path('listing/<int:pk>/delete/', views.trade_listing_delete, name='trade_listing_delete'),
     path("sent_offers/", views.sent_offers, name="sent_offers"),
     path('rescind_offer/<int:id>/', views.rescind_offer, name='rescind_offer'),
 ]

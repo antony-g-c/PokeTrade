@@ -3,3 +3,4 @@ login directory - formerly "core", login functionality<br/>
 collection directory - handles poketrade users/pokemon cards etc<br/>
 <br/>
 API used: API TCG
+<br/> team website: https://sites.google.com/view/jonathan3-poketrade/home
